@@ -69,20 +69,39 @@ int index(List L) {
 }
 
 int front(List L) {
-    if(L->length > 0) {
-        return (L->front)->data;
+    if(L == NULL) {
+        printf("List Error: Calling front() on NULL List reference\n");
+        exit(EXIT_FAILURE);
     }
-    //if the length is less than 0, return EXIT_FAILURE (will never happen)
-    printf("List Error: Calling front() on NULL list reference\n");
-    return(EXIT_FAILURE);
+    if(L->length == 0) {
+        printf("List Error: Calling front() on empty List reference\n");
+        exit(EXIT_FAILURE);
+    }
+    return (L->front)->data;
 }
 
 int back(List L){
-    if(L->length > 0) {
-        return (L->back)->data;
+    if(L == NULL) {
+        printf("List Error: Calling back() on NULL List reference\n");
+        exit(EXIT_FAILURE);
     }
-    //if the length is less than 0
-    return -1;
+    if(L->length == 0) {
+        printf("List Error: Calling back() on empty List reference\n");
+        exit(EXIT_FAILURE);
+    }
+    return (L->back)->data;
+}
+
+int get(List L) { 
+    if(L == NULL) {
+        printf("List Error: Calling get() on a NULL list reference");
+        exit(EXIT_FAILURE);
+    }
+    if(L->length == 0) {
+        printf("List Error: Calling get() on empty List reference");
+        exit(EXIT_FAILURE);
+    }
+    return (L->cursor)->data; 
 }
 
 bool equals(List A, List B) {
@@ -147,6 +166,7 @@ void moveFront(List L) {
         exit(EXIT_FAILURE);
     }
     L->cursor = L->front;
+    L->index = 0;
 }
 
 void moveBack(List L) {
@@ -159,6 +179,7 @@ void moveBack(List L) {
         exit(EXIT_FAILURE);
     }
     L->cursor = L->back;
+    L->index = L->length - 1;
 }
 
 void movePrev(List L) {
@@ -247,4 +268,17 @@ void insertBefore(List L, int x) {
     N->prev = prev;
     N->next = (L->cursor);
     L->length++;
+}
+
+//print function
+void printList(List L) {
+    Node N = NULL;
+    if(L->length == 0) {
+        printf("List Error: Calling printList() on a NULL list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    for(N = L->front; N != NULL; N = N->next) {
+        printf("%d ", N->data);
+    }
+    printf("\n");
 }

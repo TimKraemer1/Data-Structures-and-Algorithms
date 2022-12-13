@@ -32,7 +32,7 @@ void deleteBack(List L);
 void deleteL(List L);
 
 //Other operations
-void printList(FILE* out, List L);
+void printList(List L);
 List copyList(List L);
 List concatList(List A, List B);
 
