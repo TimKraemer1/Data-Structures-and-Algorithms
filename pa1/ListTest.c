@@ -9,4 +9,5 @@ int main() {
 
     test = newList();
     freeList(&test);
+    printf("This is a test\n");
 }
