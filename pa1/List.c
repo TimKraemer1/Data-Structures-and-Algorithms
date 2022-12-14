@@ -65,7 +65,12 @@ int length(List L) {
 }
 
 int index(List L) {
-    return L->index;
+    if(L->cursor != NULL) {
+        return L->index;
+    }
+    else {
+        return -1;
+    }
 }
 
 int front(List L) {
@@ -94,11 +99,15 @@ int back(List L){
 
 int get(List L) { 
     if(L == NULL) {
-        printf("List Error: Calling get() on a NULL list reference");
+        printf("List Error: Calling get() on a NULL list reference\n");
         exit(EXIT_FAILURE);
     }
     if(L->length == 0) {
-        printf("List Error: Calling get() on empty List reference");
+        printf("List Error: Calling get() on empty List reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->index < 0) {
+        printf("List Error: Calling get() with an invalid index\n");
         exit(EXIT_FAILURE);
     }
     return (L->cursor)->data; 
@@ -191,8 +200,16 @@ void movePrev(List L) {
         printf("List Error: Calling movePrev() with empty List reference\n");
         exit(EXIT_FAILURE);
     }
-    if(L->cursor != NULL) {
+    if(L->cursor == NULL) {
+        return;
+    }
+    else if(L->cursor == L->front) {
+        L->cursor = NULL;
+        L->index = -1;
+    }
+    else {
         L->cursor = (L->cursor)->prev;
+        L->index--;
     }
 }
 
@@ -205,8 +222,16 @@ void moveNext(List L) {
         printf("List Error: Calling moveNext() with empty List reference\n");
         exit(EXIT_FAILURE);
     }
-    if(L->cursor != NULL) {
+    if(L->cursor == NULL) {
+        return;
+    }
+    else if(L->cursor == L->back) {
+        L->cursor = NULL;
+        L->index = -1;
+    }
+    else {
         L->cursor = (L->cursor)->next;
+        L->index++;
     }
 }
 

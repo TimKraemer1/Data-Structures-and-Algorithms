@@ -29,5 +29,15 @@ int main() {
     printf("Back Data: %d\n", back(test));
     printf("Front Data: %d\n", front(test));
 
+    set(test, 8);
+    printList(test);
+
+    moveFront(test);
+    moveNext(test);
+    moveNext(test);
+    moveNext(test);
+
+    printf("Index: %d, Value: %d\n", index(test), get(test));
+
     freeList(&test);
 }

@@ -10,10 +10,10 @@ ListTest : ListTest.o List.o
 	gcc -std=c17 -Wall -o ListTest ListTest.o List.o 
 
 ListTest.o : List.h ListTest.c
-	gcc -std=c17 -Wall -c ListTest.c
+	gcc -std=c17 -Wall -c -g ListTest.c
 
 List.o : List.h List.c
-	gcc -std=c17 -Wall -c List.c
+	gcc -std=c17 -Wall -c -g List.c
 
 clean :
 	rm -f ListTest ListTest.o List.o
