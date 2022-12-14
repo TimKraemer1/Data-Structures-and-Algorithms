@@ -16,28 +16,14 @@ int main() {
     prepend(test, 0);
 
     printList(test);
-    printf("Length: %d\n", length(test));
 
     moveFront(test);
-    printf("Index: %d\n", index(test));
-    printf("Value: %d\n", get(test));
+    moveNext(test);
 
-    moveBack(test);
-    printf("Index: %d\n", index(test));
-    printf("Value: %d\n", get(test));
-
-    printf("Back Data: %d\n", back(test));
-    printf("Front Data: %d\n", front(test));
-
-    set(test, 8);
+    deleteBack(test);
     printList(test);
 
-    moveFront(test);
-    moveNext(test);
-    moveNext(test);
-    moveNext(test);
-
-    printf("Index: %d, Value: %d\n", index(test), get(test));
+    printf("Length = %d, Cursor Index = %d, Cursor Value = %d\n", length(test), index(test), get(test));
 
     freeList(&test);
 }

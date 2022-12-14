@@ -147,9 +147,9 @@ void clear(List L) {
         }
         L->front = NULL;
         L->back = NULL;
+        L->cursor = NULL;
         L->index = -1;
         L->length = 0;
-        L->index = 0;
     }
 }
 
@@ -287,12 +287,95 @@ void insertBefore(List L, int x) {
         exit(EXIT_FAILURE);
     }
     Node N = newNode(x);
-    Node prev = (L->cursor)->prev;
-    prev->next = N;
-    (L->cursor)->prev = N;
-    N->prev = prev;
-    N->next = (L->cursor);
-    L->length++;
+    if(L->cursor == L->front) {
+        Node front = L->front;
+        L->front = N;
+        N->next = front;
+        front->prev = N;
+        L->length++;
+        L->index++;
+    }
+    else {
+        Node prev = (L->cursor)->prev;
+        prev->next = N;
+        (L->cursor)->prev = N;
+        N->next = L->cursor;
+        N->prev = prev;
+        L->length++;
+        L->index++;
+    }
+}
+
+void insertAfter(List L, int x) {
+    if(L == NULL) {
+        printf("List Error: Calling insertAfter() on NULL list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->length == 0) {
+        printf("List Error: Calling insertAfter() with empty list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->index < 0) {
+        printf("List Error: Calling insertAfter() with invalid cursor index (-1)\n");
+        exit(EXIT_FAILURE);
+    }
+    Node N = newNode(x);
+    if(L->cursor == L->back) {
+        Node back = L->back;
+        L->back = N;
+        N->prev = back;
+        back->next = N;
+        L->length++;
+    }
+    else {
+        Node next = (L->cursor)->next;
+        next->prev = N;
+        (L->cursor)->next = N;
+        N->prev = (L->cursor);
+        N->next = next;
+        L->length++;
+    }
+}
+
+void deleteFront(List L) {
+    if(L == NULL) {
+        printf("List Error: Calling insertBefore() on NULL list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->length == 0) {
+        printf("List Error: Calling insertBefore() with empty list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->cursor == L->front) {
+        L->cursor = (L->front)->next;
+        L->index++;
+    }
+    Node old_front = L->front;
+    L->front = L->cursor;
+    (L->front)->prev = NULL;
+    freeNode(&old_front);
+    L->length--;
+    L->index--;
+}
+
+void deleteBack(List L) {
+    if(L == NULL) {
+        printf("List Error: Calling insertBefore() on NULL list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->length == 0) {
+        printf("List Error: Calling insertBefore() with empty list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->cursor == L->back) {
+        L->cursor = (L->back)->prev;
+        L->index--;
+    }
+    Node old_back = L->back;
+    L->back = L->cursor;
+    (L->back)->next = NULL;
+    freeNode(&old_back);
+    L->length--;
 }
 
 //print function
