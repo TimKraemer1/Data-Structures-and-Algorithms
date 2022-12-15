@@ -351,7 +351,7 @@ void deleteFront(List L) {
         L->index++;
     }
     Node old_front = L->front;
-    L->front = L->cursor;
+    L->front = (L->front)->next;
     (L->front)->prev = NULL;
     freeNode(&old_front);
     L->length--;
@@ -372,7 +372,7 @@ void deleteBack(List L) {
         L->index--;
     }
     Node old_back = L->back;
-    L->back = L->cursor;
+    L->back = (L->back)->prev;
     (L->back)->next = NULL;
     freeNode(&old_back);
     L->length--;
