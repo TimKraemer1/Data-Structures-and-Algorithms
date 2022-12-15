@@ -378,6 +378,10 @@ void deleteBack(List L) {
     L->length--;
 }
 
+void delete(List L) {
+    
+}
+
 //print function
 void printList(List L) {
     Node N = NULL;
