@@ -162,6 +162,10 @@ void set(List L, int x) {
         printf("List Error: List length = 0 while calling set()\n");
         exit(EXIT_FAILURE);
     }
+    if(L->index < 0) {
+        printf("List Error: Calling set() with invalid index value (-1)\n");
+        exit(EXIT_FAILURE);
+    }
     (L->cursor)->data = x;
 }
 
@@ -379,7 +383,37 @@ void deleteBack(List L) {
 }
 
 void delete(List L) {
-    //commit test
+    if(L == NULL) {
+        printf("List Error: Calling delete() on NULL list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->length == 0) {
+        printf("List Error: Calling delete() with empty list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->index < 0) {
+        printf("List Error: Calling delete() with an invalid index (-1)\n");
+        exit(EXIT_FAILURE);
+    }
+    if(L->cursor == L->front) {
+        deleteFront(L);
+        return;
+    }
+    else if(L->cursor == L->back) {
+        deleteBack(L);
+        return;
+    }
+    else {
+        Node old = L->cursor;
+        Node old_prev = (L->cursor)->prev;
+        Node old_next = (L->cursor)->next;
+        old_prev->next = old_next;
+        old_next->prev = old_prev;
+        freeNode(&old);
+        L->cursor = NULL;
+        L->index = -1;
+        L->length--;
+    }
 }
 
 //print function
@@ -393,4 +427,18 @@ void printList(List L) {
         printf("%d ", N->data);
     }
     printf("\n");
+}
+
+List copyList(List L) {
+    if(L == NULL) {
+        printf("List Error: calling copyList() on a NULL list reference\n");
+        exit(EXIT_FAILURE);
+    }
+    List copied_List = newList();
+    Node curr_node = L->front;
+    for(int i = 0; i < length(L); i++) {
+        append(copied_List, curr_node->data);
+        curr_node = curr_node->next;
+    }
+    return copied_List;
 }

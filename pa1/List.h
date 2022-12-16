@@ -29,7 +29,7 @@ void insertBefore(List L, int x);
 void insertAfter(List L, int x);
 void deleteFront(List L);
 void deleteBack(List L);
-void deleteL(List L);
+void delete(List L);
 
 //Other operations
 void printList(List L);
