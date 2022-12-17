@@ -417,16 +417,16 @@ void delete(List L) {
 }
 
 //print function
-void printList(List L) {
+void printList(FILE* out, List L) {
     Node N = NULL;
     if(L->length == 0) {
         printf("List Error: Calling printList() on a NULL list reference\n");
         exit(EXIT_FAILURE);
     }
     for(N = L->front; N != NULL; N = N->next) {
-        printf("%d ", N->data);
+        fprintf(out, "%d", (L->cursor)->data);
     }
-    printf("\n");
+    fprintf(out, "\n");
 }
 
 List copyList(List L) {
