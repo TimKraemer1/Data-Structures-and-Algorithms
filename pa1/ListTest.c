@@ -9,13 +9,9 @@ int main() {
 
     test1 = newList();
 
-    append(test1, 2);
-    append(test1, 3);
-    append(test1, 4);
-    append(test1, 5);
-    prepend(test1, 0);
+    clear(test1);
 
-    printList(stdout, test1);
+    printf("List Length: %d, List index = %d\n", length(test1), index(test1));
 
     freeList(&test1);
 }

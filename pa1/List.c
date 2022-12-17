@@ -60,10 +60,12 @@ void freeList(List* pL){
     }
 }
 
+//returns the length of the List
 int length(List L) {
     return L->length;
 }
 
+//returns the index of the List. -1 if cursor is not defined
 int index(List L) {
     if(L->cursor != NULL) {
         return L->index;
@@ -73,6 +75,7 @@ int index(List L) {
     }
 }
 
+//returns data from front node in the List
 int front(List L) {
     if(L == NULL) {
         printf("List Error: Calling front() on NULL List reference\n");
@@ -85,6 +88,7 @@ int front(List L) {
     return (L->front)->data;
 }
 
+//returns data from the back node in the List
 int back(List L){
     if(L == NULL) {
         printf("List Error: Calling back() on NULL List reference\n");
@@ -97,6 +101,7 @@ int back(List L){
     return (L->back)->data;
 }
 
+//returns data from the cursor node in the List
 int get(List L) { 
     if(L == NULL) {
         printf("List Error: Calling get() on a NULL list reference\n");
@@ -113,6 +118,7 @@ int get(List L) {
     return (L->cursor)->data; 
 }
 
+//returns True if two lists are equal, false otherwise
 bool equals(List A, List B) {
     if(A == NULL || B == NULL){
         printf("List Error: Calling equals() on NULL List reference(s)\n");
@@ -132,6 +138,7 @@ bool equals(List A, List B) {
     return eq;
 }
 
+//clears the List so that it becomes empty, sets cursor as undefined and index to -1
 void clear(List L) {
     if(L == NULL) {
         printf("List Error: Calling clear() on NULL List reference\n");
@@ -153,6 +160,7 @@ void clear(List L) {
     }
 }
 
+//changes the value of the node that the cursor is currently on in List
 void set(List L, int x) {
     if(L == NULL) {
         printf("List Error: Calling set() on NULL List reference\n");
@@ -169,6 +177,7 @@ void set(List L, int x) {
     (L->cursor)->data = x;
 }
 
+//moves the cursor to the front of the list
 void moveFront(List L) {
     if(L == NULL) {
         printf("List Error: Calling moveFront() on NULL List reference\n");
@@ -182,6 +191,7 @@ void moveFront(List L) {
     L->index = 0;
 }
 
+//moves the cursor to the back of the list
 void moveBack(List L) {
     if(L == NULL) {
         printf("List Error: Calling moveBack() on NULL List reference\n");
@@ -195,6 +205,7 @@ void moveBack(List L) {
     L->index = L->length - 1;
 }
 
+//moves cursor to the node before the cursor
 void movePrev(List L) {
     if(L == NULL) {
         printf("List Error: Calling movePrev() on NULL list reference\n");
@@ -217,6 +228,7 @@ void movePrev(List L) {
     }
 }
 
+//moves cursor to the node after the cursor
 void moveNext(List L) {
     if(L == NULL) {
         printf("List Error: Calling moveNext() on NULL list reference\n");
@@ -239,6 +251,7 @@ void moveNext(List L) {
     }
 }
 
+//inserts new element into List. If List is not empty, inserts element before first element
 void prepend(List L, int x) {
     if(L == NULL) {
         printf("List Error: Calling prepend on NULL list reference\n");
@@ -258,6 +271,7 @@ void prepend(List L, int x) {
     L->length++;
 }
 
+//inserts new element into List. If List is not empty, inserts element after last element
 void append(List L, int x) {
     if(L == NULL) {
         printf("List Error: Calling prepend on NULL list reference\n");
@@ -277,6 +291,7 @@ void append(List L, int x) {
     L->length++;
 }
 
+//inserts element before cursor element in List
 void insertBefore(List L, int x) {
     if(L == NULL) {
         printf("List Error: Calling insertBefore() on NULL list reference\n");
@@ -310,6 +325,7 @@ void insertBefore(List L, int x) {
     }
 }
 
+//inserts element after cursor element in List
 void insertAfter(List L, int x) {
     if(L == NULL) {
         printf("List Error: Calling insertAfter() on NULL list reference\n");
@@ -341,6 +357,7 @@ void insertAfter(List L, int x) {
     }
 }
 
+//deletes front element of list.
 void deleteFront(List L) {
     if(L == NULL) {
         printf("List Error: Calling insertBefore() on NULL list reference\n");
@@ -362,6 +379,7 @@ void deleteFront(List L) {
     L->index--;
 }
 
+//deletes back element of list
 void deleteBack(List L) {
     if(L == NULL) {
         printf("List Error: Calling insertBefore() on NULL list reference\n");
@@ -382,6 +400,7 @@ void deleteBack(List L) {
     L->length--;
 }
 
+//deletes cursor element of List
 void delete(List L) {
     if(L == NULL) {
         printf("List Error: Calling delete() on NULL list reference\n");
@@ -423,12 +442,14 @@ void printList(FILE* out, List L) {
         printf("List Error: Calling printList() on a NULL list reference\n");
         exit(EXIT_FAILURE);
     }
+
     for(N = L->front; N != NULL; N = N->next) {
-        fprintf(out, "%d", (L->cursor)->data);
+        fprintf(out, "%d ", N->data);
     }
     fprintf(out, "\n");
 }
 
+//creates new list and copies contents from given list to new list
 List copyList(List L) {
     if(L == NULL) {
         printf("List Error: calling copyList() on a NULL list reference\n");
