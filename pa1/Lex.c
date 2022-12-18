@@ -35,9 +35,6 @@ int main(int argc, char* argv[]) {
     }
 
     fclose(in_fp);
-    for(int i = 0; i < line_count; i++) {
-        printf("%s\n", input_array[i]);
-    }
     
     List word_list = newList();
 
@@ -45,12 +42,36 @@ int main(int argc, char* argv[]) {
         if(length(word_list) == 0) {
             append(word_list, i);
             moveFront(word_list);
-            break;
+        }
+        else {
+            for(int j=0; j < length(word_list); j++) {
+                if(strcmp(input_array[i], input_array[get(word_list)]) <= 0) {
+                    insertBefore(word_list, i);
+                    break;
+                }
+                moveNext(word_list);
+            }
+            //check to see if we already inserted the current index anywhere in the list earlier
+            if(index(word_list) == -1) {
+                append(word_list, i);
+            }
+            moveFront(word_list);
         }
     }
 
+    FILE* out_fp = fopen(argv[2], "w");
+    moveFront(word_list);
+    while(index(word_list) != -1) {
+        fprintf(out_fp, "%s\n", input_array[get(word_list)]);
+        moveNext(word_list);
+    }
 
-    //freeing list
+    fclose(out_fp);
+
+    //freeing linked list
+    freeList(&word_list);
+
+    //freeing word array
     for(int i = 0; i < line_count; i++) {
         free(input_array[i]);
     }
