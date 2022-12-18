@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "List.h"
 
@@ -14,8 +15,8 @@ int main(int argc, char* argv[]) {
 
     if(in_fp == NULL){
         printf("IO Error: Could not open file %s\n", argv[1]);
-        exit(EXIT_FAILURE);
-    }
+        return -1;    
+        }
     for(char c = getc(in_fp); c != EOF; c = getc(in_fp)) {
         if(c == '\n') {
             line_count++;
@@ -29,6 +30,7 @@ int main(int argc, char* argv[]) {
     for(int i = 0; i < line_count; i++) {
         char* new_word = malloc(sizeof(char) * string_length);
         fgets(new_word, string_length, in_fp);
+        new_word[strlen(new_word)-1] = '\0';
         input_array[i] = new_word;
     }
 
@@ -37,6 +39,17 @@ int main(int argc, char* argv[]) {
         printf("%s\n", input_array[i]);
     }
     
+    List word_list = newList();
+
+    for(int i = 0; i < line_count; i++) {
+        if(length(word_list) == 0) {
+            append(word_list, i);
+            moveFront(word_list);
+            break;
+        }
+    }
+
+
     //freeing list
     for(int i = 0; i < line_count; i++) {
         free(input_array[i]);
