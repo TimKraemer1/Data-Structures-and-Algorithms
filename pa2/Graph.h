@@ -4,7 +4,7 @@
 #include "List.h"
 
 #define NIL  -5
-#define INF   8
+#define INF  -8
 
 typedef struct GraphObj* Graph;
 
