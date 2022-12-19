@@ -3,8 +3,8 @@
 
 #include "List.h"
 
-#define NILL = -5;
-#define INF = 8;
+#define NIL  -5
+#define INF   8
 
 typedef struct GraphObj* Graph;
 
