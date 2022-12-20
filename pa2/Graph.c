@@ -5,6 +5,8 @@
 #include "Graph.h"
 #include "List.h"
 
+enum color {WHITE, GREY, BLACK};
+
 typedef struct GraphObj {
     int vertices;
     int edges;
@@ -19,13 +21,19 @@ typedef struct GraphObj {
 Graph newGraph(int n) {
     Graph g = malloc(sizeof(GraphObj));
     g->vertices = n;
-    g->edges = NULL;
-    g->vertex_source = NULL;
-    g->BFS_run = false;
+    g->edges = 0;
+    g->vertex_source = NIL;
     g->color = (int *) calloc(n+1, sizeof(int));
     g->parent = (int *) calloc(n+1, sizeof(int));
     g->distance = (int *) calloc(n+1, sizeof(int));
     g->neighbors = (List*) calloc(n+1, sizeof(List));
+
+    for(int i = 0; i < n+1; i++) {
+        (g->color)[i] = WHITE;
+        (g->parent)[i] = NIL;
+        (g->distance)[i] = INF;
+        (g->neighbors)[i] = newList();
+    }
     return(g);
 }
 
@@ -64,30 +72,15 @@ int getSize(Graph G) {
 }
 
 int getSource(Graph G) {
-    if(!G->BFS_run) {
-        return NIL;
-    }
-    else {
-        return G->vertex_source;
-    }
+    return G->vertex_source;
 }
 
 int getParent(Graph G, int u) {
-    if(!G->BFS_run) {
-        return NIL;
-    }
-    else {
-        return (G->parent)[u];
-    }
+    return (G->parent)[u];
 }
 
 getDist(Graph G, int u) {
-    if(!G->BFS_run) {
-        return INF;
-    }
-    else {
-        return (G->distance)[u];
-    }
+    return (G->distance)[u];
 }
 
 void getPath(List L, Graph G, int u) {
