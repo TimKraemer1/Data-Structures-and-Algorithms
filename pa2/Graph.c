@@ -5,13 +5,32 @@
 #include "Graph.h"
 #include "List.h"
 
+void in_order(List L, int a) {
+    if(length(L) == 0) {
+        append(L, a);
+    }
+    else {
+        moveFront(L);
+        while(index(L) != -1) {
+            if(a <= get(L)) {
+                insertBefore(L, a);
+                break;
+            }
+            moveNext(L);
+        }
+        //if int hasnt been inserted at this point, it is the largest value and gets appended at the end
+        if(index(L) == -1) {
+            append(L, a);
+        }
+    }
+}
+
 enum color {WHITE, GREY, BLACK};
 
 typedef struct GraphObj {
     int vertices;
     int edges;
     int vertex_source;
-    bool BFS_run;
     List* neighbors;
     int* color;
     int* parent;
@@ -52,8 +71,8 @@ void freeGraph(Graph* pG) {
             (*pG)->distance = NULL;
         }
         if((*pG)->neighbors != NULL) {
-            for(int i = 0; i < (*pG)->vertices; i++) {
-                freeList((*pG)->neighbors);
+            for(int i = 0; i < (*pG)->vertices+1; i++) {
+                freeList(&(((*pG)->neighbors)[i]));
             }
             free((*pG)->neighbors);
             (*pG)->neighbors = NULL;
@@ -64,29 +83,108 @@ void freeGraph(Graph* pG) {
 }
 
 int getOrder(Graph G) {
+    if(G == NULL) {
+        printf("Graph Error: Calling getParent with a NULL Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
     return G->vertices;
 }
 
 int getSize(Graph G) {
+    if(G == NULL) {
+        printf("Graph Error: Calling getParent with a NULL Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
     return G->edges;
 }
 
 int getSource(Graph G) {
+    if(G == NULL) {
+        printf("Graph Error: Calling getParent with a NULL Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
     return G->vertex_source;
 }
 
 int getParent(Graph G, int u) {
+    if(G == NULL) {
+        printf("Graph Error: Calling getParent with a NULL Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(u > G->vertices || u < 1) {
+        printf("Graph Error: Calling getParent with an invalid vertex value\n");
+        exit(EXIT_FAILURE);
+    }
     return (G->parent)[u];
 }
 
-getDist(Graph G, int u) {
+int getDist(Graph G, int u) {
+    if(G == NULL) {
+        printf("Graph Error: Calling getDist with a NULL Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(u > G->vertices || u < 1) {
+        printf("Graph Error: Calling getDist with an invalid vertex value\n");
+        exit(EXIT_FAILURE);
+    }
     return (G->distance)[u];
 }
 
+//not finished
 void getPath(List L, Graph G, int u) {
-
+    if(G == NULL) {
+        printf("Graph Error: Calling getDist with a NULL Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(u > G->vertices || u < 1) {
+        printf("Graph Error: Calling getDist with an invalid vertex value\n");
+        exit(EXIT_FAILURE);
+    }
+    if(getSource(G) == NIL) {
+        printf("Graph Error: calling getSource when BFS has not been run\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
+//check if this is correct
 void makeNull(Graph G) {
-    
+    if(G == NULL) {
+        printf("Graph Error: Calling addEdge() with Null Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    G->edges = 0;
+    G->vertex_source = NIL;
+    for(int i = 0; i < G->vertices + 1; i++) {
+        (G->color)[i] = WHITE;
+        (G->distance)[i] = INF;
+        (G->parent)[i] = NIL;
+        clear((G->neighbors)[i]);
+    }
+}
+
+void addEdge(Graph G, int u, int v) {
+    if(G == NULL) {
+        printf("Graph Error: Calling addEdge() with Null Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(u < 1 || v < 1 || u > G->vertices || v > G->vertices) {
+        printf("Graph Error: Calling addEdge with invalid vertex values\n");
+        exit(EXIT_FAILURE);
+    }
+    G->edges++;
+    in_order((G->neighbors)[u], v);
+    in_order((G->neighbors)[v], u);
+}
+
+void addArc(Graph G, int u, int v) {
+    if(G == NULL) {
+        printf("Graph Error: Calling addEdge() with Null Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(u < 1 || v < 1 || u > G->vertices || v > G->vertices) {
+        printf("Graph Error: Calling addEdge with invalid vertex values\n");
+        exit(EXIT_FAILURE);
+    }
+    G->edges++;
+    in_order((G->neighbors)[u], v);
 }
