@@ -1,0 +1,12 @@
+//Backup Folder
+backup/
+
+//Object Files
+*.o
+
+//Executables
+Lex
+graphTest
+
+//Text Files
+*.txt
