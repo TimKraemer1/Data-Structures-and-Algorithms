@@ -146,7 +146,6 @@ void getPath(List L, Graph G, int u) {
     }
 }
 
-//check if this is correct
 void makeNull(Graph G) {
     if(G == NULL) {
         printf("Graph Error: Calling addEdge() with Null Graph reference\n");
@@ -171,6 +170,7 @@ void addEdge(Graph G, int u, int v) {
         printf("Graph Error: Calling addEdge with invalid vertex values\n");
         exit(EXIT_FAILURE);
     }
+    //add check to see if Edge already exists
     G->edges++;
     in_order((G->neighbors)[u], v);
     in_order((G->neighbors)[v], u);
@@ -187,4 +187,48 @@ void addArc(Graph G, int u, int v) {
     }
     G->edges++;
     in_order((G->neighbors)[u], v);
+}
+
+void BFS(Graph G, int s) {
+    if(G == NULL) {
+        printf("Graph Error: Calling BFS() with a NULL Graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    if(s < 1 && s > G->vertices) {
+        printf("Graph Error: Calling BFS() with an invalid vertex input\n");
+        exit(EXIT_FAILURE);
+    }
+    for(int x = 1; x < G->vertices; x++) {
+        (G->color)[x] = WHITE;
+        (G->distance)[x] = INF;
+        (G->parent)[x] = NIL;
+    }
+    (G->color)[s] = GREY;
+    List queue = newList();
+    append(queue, s);
+    while(length(queue) != 0) {
+        int x = back(queue);
+        deleteBack(queue);
+        moveFront((G->neighbors)[x]);
+        while(index((G->neighbors)[x]) != NULL) {
+            int y = get((G->neighbors)[x]);
+            if(y == WHITE) {
+                (G->color)[y] = GREY;
+                (G->distance)[y] = (G->distance)[x] + 1;
+                (G->parent)[y] = x;
+                append(queue, y);
+            }
+            moveNext((G->neighbors)[x]);
+        }
+        (G->color)[x] = BLACK;
+    }
+    freeGraph(queue);
+}
+
+//additional function for debugging
+void printNeighbors(Graph G) {
+    for(int i = 1; i < G->vertices+1; i++) {
+        printList(stdout, (G->neighbors)[i]);
+        printf("\n");
+    }
 }

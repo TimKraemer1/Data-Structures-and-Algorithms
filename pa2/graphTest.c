@@ -7,6 +7,14 @@
 int main(void) {
     printf("test\n");
     Graph test = newGraph(5);
-    printf("Order: %d, Size: %d, Source: %d, Parent: %d, Distance: %d\n", getOrder(test), getSize(test), getSource(test), getParent(test, 3), getDist(test, 8));
+
+    addEdge(test, 1, 5);
+    addEdge(test, 2, 5);
+    addEdge(test, 4, 2);
+    addEdge(test, 2, 3);
+    addEdge(test, 4, 3);
+
+    printNeighbors(test);
+
     freeGraph(&test);
 }
