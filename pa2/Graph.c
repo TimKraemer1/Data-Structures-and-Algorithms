@@ -204,13 +204,14 @@ void BFS(Graph G, int s) {
         (G->parent)[x] = NIL;
     }
     (G->color)[s] = GREY;
+    (G->distance)[s] = 0;
     List queue = newList();
     append(queue, s);
     while(length(queue) != 0) {
         int x = back(queue);
         deleteBack(queue);
         moveFront((G->neighbors)[x]);
-        while((G->neighbors)[x] != NULL) {
+        while(index((G->neighbors)[x]) != -1) {
             int y = get((G->neighbors)[x]);
             if((G->color)[y] == WHITE) {
                 (G->color)[y] = GREY;
