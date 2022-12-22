@@ -198,7 +198,7 @@ void BFS(Graph G, int s) {
         printf("Graph Error: Calling BFS() with an invalid vertex input\n");
         exit(EXIT_FAILURE);
     }
-    for(int x = 1; x < G->vertices; x++) {
+    for(int x = 1; x < G->vertices + 1; x++) {
         (G->color)[x] = WHITE;
         (G->distance)[x] = INF;
         (G->parent)[x] = NIL;
@@ -210,9 +210,9 @@ void BFS(Graph G, int s) {
         int x = back(queue);
         deleteBack(queue);
         moveFront((G->neighbors)[x]);
-        while(index((G->neighbors)[x]) != NULL) {
+        while((G->neighbors)[x] != NULL) {
             int y = get((G->neighbors)[x]);
-            if(y == WHITE) {
+            if((G->color)[y] == WHITE) {
                 (G->color)[y] = GREY;
                 (G->distance)[y] = (G->distance)[x] + 1;
                 (G->parent)[y] = x;
@@ -222,7 +222,7 @@ void BFS(Graph G, int s) {
         }
         (G->color)[x] = BLACK;
     }
-    freeGraph(queue);
+    freeList(&queue);
 }
 
 //additional function for debugging

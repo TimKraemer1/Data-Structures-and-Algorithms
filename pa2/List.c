@@ -269,6 +269,9 @@ void prepend(List L, int x) {
         temp->prev = N;
     }
     L->length++;
+    if(L->cursor != NULL) {
+        L->index++;
+    }
 }
 
 //inserts new element into List. If List is not empty, inserts element after last element
@@ -289,6 +292,9 @@ void append(List L, int x) {
         temp->next = N;
     }
     L->length++;
+    if(L->cursor != NULL && L->index == L->index - 1) {
+        L->index ++;
+    }
 }
 
 //inserts element before cursor element in List
@@ -360,44 +366,71 @@ void insertAfter(List L, int x) {
 //deletes front element of list.
 void deleteFront(List L) {
     if(L == NULL) {
-        printf("List Error: Calling insertBefore() on NULL list reference\n");
+        printf("List Error: Calling deleteFront() on NULL list reference\n");
         exit(EXIT_FAILURE);
     }
     if(L->length == 0) {
-        printf("List Error: Calling insertBefore() with empty list reference\n");
+        printf("List Error: Calling deleteFront() with empty list reference\n");
         exit(EXIT_FAILURE);
     }
-    if(L->cursor == L->front) {
-        L->cursor = (L->front)->next;
-        L->index++;
+    int lengthList = length(L);
+    Node old_Front = L->front;
+
+    //check if list is only 1 element
+    if(lengthList == 1) {
+        L->cursor = NULL;
+        L->front = NULL;
+        L->back = NULL;
+        L->index = -1;
+        L->length--;
+        freeNode(&old_Front);
+        return;
     }
-    Node old_front = L->front;
-    L->front = (L->front)->next;
-    (L->front)->prev = NULL;
-    freeNode(&old_front);
+
     L->length--;
-    L->index--;
+    L->front = old_Front->next;
+    (L->front)->prev = NULL;
+    if(L->cursor != old_Front) {
+        L->index--;
+    }
+    else {
+        L->index = -1;
+    }
+    freeNode(&old_Front);
 }
 
 //deletes back element of list
 void deleteBack(List L) {
     if(L == NULL) {
-        printf("List Error: Calling insertBefore() on NULL list reference\n");
+        printf("List Error: Calling deleteBack() on NULL list reference\n");
         exit(EXIT_FAILURE);
     }
     if(L->length == 0) {
-        printf("List Error: Calling insertBefore() with empty list reference\n");
+        printf("List Error: Calling deleteBack() with empty list reference\n");
         exit(EXIT_FAILURE);
     }
-    if(L->cursor == L->back) {
-        L->cursor = (L->back)->prev;
-        L->index--;
-    }
+    
+    int listLen = length(L);
     Node old_back = L->back;
-    L->back = (L->back)->prev;
-    (L->back)->next = NULL;
-    freeNode(&old_back);
+
+    //check if List has only 1 element
+    if(listLen == 1) {
+        L->cursor = NULL;
+        L->front = NULL;
+        L->back = NULL;
+        L->index = -1;
+        L->length--;
+        freeNode(&old_back);
+        return;
+    }
+
     L->length--;
+    L->back = old_back->prev;
+    (L->back)->next = NULL;
+    if(L->cursor == old_back) {
+        L->index = -1;
+    }
+    freeNode(&old_back);
 }
 
 //deletes cursor element of List
