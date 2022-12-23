@@ -247,10 +247,18 @@ void BFS(Graph G, int s) {
     freeList(&queue);
 }
 
-//additional function for debugging
-void printNeighbors(Graph G) {
-    for(int i = 1; i < G->vertices+1; i++) {
-        printList(stdout, (G->neighbors)[i]);
-        printf("\n");
+void printGraph(FILE* out, Graph G) {
+    if(G == NULL) {
+        printf("Graph Error: calling printGraph() on a NULL graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    for(int i = 1; i <= G->vertices; i++) {
+        fprintf(out, "%d: ", i);
+        moveFront((G->neighbors)[i]);
+        while(index((G->neighbors)[i]) != -1) {
+            fprintf(out, "%d ", get((G->neighbors)[i]));
+            moveNext((G->neighbors)[i]);
+        }
+        fprintf(out, "\n");
     }
 }

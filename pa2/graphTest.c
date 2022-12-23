@@ -19,13 +19,7 @@ int main(void) {
 
     BFS(test, 3);
 
-    List L = newList();
-
-    getPath(L, test, 6);   
-
-    printList(stdout, L);
+    printGraph(stdout, test);
 
     freeGraph(&test);
-    clear(L);
-    freeList(&L);
 }
