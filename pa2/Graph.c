@@ -120,11 +120,15 @@ int getParent(Graph G, int u) {
 
 int getDist(Graph G, int u) {
     if(G == NULL) {
-        printf("Graph Error: Calling getDist with a NULL Graph reference\n");
+        printf("Graph Error: Calling getDist() with a NULL Graph reference\n");
         exit(EXIT_FAILURE);
     }
     if(u > G->vertices || u < 1) {
-        printf("Graph Error: Calling getDist with an invalid vertex value\n");
+        printf("Graph Error: Calling getDist() with an invalid vertex value\n");
+        exit(EXIT_FAILURE);
+    }
+    if(getSource(G) == NIL) {
+        printf("Graph Error: calling getDist() when BFS has not been run\n");
         exit(EXIT_FAILURE);
     }
     return (G->distance)[u];
@@ -133,17 +137,33 @@ int getDist(Graph G, int u) {
 //not finished
 void getPath(List L, Graph G, int u) {
     if(G == NULL) {
-        printf("Graph Error: Calling getDist with a NULL Graph reference\n");
+        printf("Graph Error: Calling getPath() with a NULL Graph reference\n");
         exit(EXIT_FAILURE);
     }
     if(u > G->vertices || u < 1) {
-        printf("Graph Error: Calling getDist with an invalid vertex value\n");
+        printf("Graph Error: Calling getPath() with an invalid vertex value\n");
         exit(EXIT_FAILURE);
     }
     if(getSource(G) == NIL) {
-        printf("Graph Error: calling getSource when BFS has not been run\n");
+        printf("Graph Error: calling getPath() when BFS has not been run\n");
         exit(EXIT_FAILURE);
     }
+
+    List temp = newList();
+    int x = u;
+    while(x != G->vertex_source) {
+        append(temp, x);
+        x = (G->parent)[x];
+    }
+    append(temp, G->vertex_source);
+
+    moveBack(temp);
+    while(index(temp) != -1) {
+        append(L, get(temp));
+        movePrev(temp);
+    }
+    clear(temp);
+    freeList(&temp);
 }
 
 void makeNull(Graph G) {
@@ -198,6 +218,7 @@ void BFS(Graph G, int s) {
         printf("Graph Error: Calling BFS() with an invalid vertex input\n");
         exit(EXIT_FAILURE);
     }
+    G->vertex_source = s;
     for(int x = 1; x < G->vertices + 1; x++) {
         (G->color)[x] = WHITE;
         (G->distance)[x] = INF;
@@ -208,8 +229,8 @@ void BFS(Graph G, int s) {
     List queue = newList();
     append(queue, s);
     while(length(queue) != 0) {
-        int x = back(queue);
-        deleteBack(queue);
+        int x = front(queue);
+        deleteFront(queue);
         moveFront((G->neighbors)[x]);
         while(index((G->neighbors)[x]) != -1) {
             int y = get((G->neighbors)[x]);
