@@ -134,7 +134,6 @@ int getDist(Graph G, int u) {
     return (G->distance)[u];
 }
 
-//not finished
 void getPath(List L, Graph G, int u) {
     if(G == NULL) {
         printf("Graph Error: Calling getPath() with a NULL Graph reference\n");

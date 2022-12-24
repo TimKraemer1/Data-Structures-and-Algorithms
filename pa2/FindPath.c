@@ -12,20 +12,39 @@ int main(int arc, char* argv[]) {
         return -1;
     }
 
-    int line_count = 0;
     FILE* in_fp = fopen(argv[1], "r");
 
     if(in_fp == NULL) {
-        printf(stderr, "IO Error: Could not open file %s\n", argv[1]);
+        fprintf(stderr, "IO Error: Could not open file %s\n", argv[1]);
         return -1;
     }
     int num_vert;
     if(fscanf(in_fp, "%d", &num_vert) == 0) {
-        printf(stderr, "Error: file format incorrect\n");
+        fprintf(stderr, "Error: file format incorrect\n");
         return -1;
     }
 
     Graph graph1 = newGraph(num_vert);
+
+    int vert1;
+    int vert2;
+    for(int i = 1; i <= num_vert; i++) {
+        if(fscanf(in_fp, "%d %d", &vert1, &vert2) == 0) {
+            fprintf(stderr, "Error: file format incorrect\n");
+            return -1;
+        }
+        addEdge(graph1, vert1, vert2);
+    }
+
+    fscanf(in_fp, "%d %d", &vert1, &vert2);
+    if(vert1 != 0 || vert2 != 0) {
+        fprintf(stderr, "Error: file format incorrect\n");
+        return -1;
+    }
+
+    printGraph(stdout, graph1);
+
+    fclose(in_fp);
 
     freeGraph(&graph1);
 }
