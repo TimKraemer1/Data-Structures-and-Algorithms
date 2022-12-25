@@ -253,10 +253,12 @@ void printGraph(FILE* out, Graph G) {
     }
     for(int i = 1; i <= G->vertices; i++) {
         fprintf(out, "%d: ", i);
-        moveFront((G->neighbors)[i]);
-        while(index((G->neighbors)[i]) != -1) {
-            fprintf(out, "%d ", get((G->neighbors)[i]));
-            moveNext((G->neighbors)[i]);
+        if(length((G->neighbors)[i]) > 0) {
+            moveFront((G->neighbors)[i]);
+            while(index((G->neighbors)[i]) != -1) {
+                fprintf(out, "%d ", get((G->neighbors)[i]));
+                moveNext((G->neighbors)[i]);
+            }
         }
         fprintf(out, "\n");
     }

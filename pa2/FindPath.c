@@ -46,6 +46,7 @@ int main(int arc, char* argv[]) {
 
     int source;
     int dest;
+    int i = 1;
 
     while(1) {
         fscanf(in_fp, "%d %d", &source, &dest);
@@ -53,6 +54,7 @@ int main(int arc, char* argv[]) {
             break;
         }
         BFS(graph1, source);
+        printf("%d made it!\n", i);
         //printing the distance of the two vertices
         if(getDist(graph1, dest) == INF) {
             fprintf(out_fp, "The distance from %d to %d is infinity\n", source, dest);
@@ -73,6 +75,7 @@ int main(int arc, char* argv[]) {
             freeList(&temp);
             fprintf(out_fp, "\n");
         }
+        i++;
     }
 
     fclose(in_fp);
