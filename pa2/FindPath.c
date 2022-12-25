@@ -54,7 +54,6 @@ int main(int arc, char* argv[]) {
             break;
         }
         BFS(graph1, source);
-        printf("%d made it!\n", i);
         //printing the distance of the two vertices
         if(getDist(graph1, dest) == INF) {
             fprintf(out_fp, "The distance from %d to %d is infinity\n", source, dest);

@@ -127,11 +127,12 @@ int getDist(Graph G, int u) {
         printf("Graph Error: Calling getDist() with an invalid vertex value\n");
         exit(EXIT_FAILURE);
     }
-    if(getSource(G) == NIL) {
-        printf("Graph Error: calling getDist() when BFS has not been run\n");
-        exit(EXIT_FAILURE);
+    if(G->vertex_source == NIL) {
+        return INF;
     }
-    return (G->distance)[u];
+    else {
+        return (G->distance)[u];
+    }
 }
 
 void getPath(List L, Graph G, int u) {
@@ -230,16 +231,18 @@ void BFS(Graph G, int s) {
     while(length(queue) != 0) {
         int x = front(queue);
         deleteFront(queue);
-        moveFront((G->neighbors)[x]);
-        while(index((G->neighbors)[x]) != -1) {
-            int y = get((G->neighbors)[x]);
-            if((G->color)[y] == WHITE) {
-                (G->color)[y] = GREY;
-                (G->distance)[y] = (G->distance)[x] + 1;
-                (G->parent)[y] = x;
-                append(queue, y);
+        if(length((G->neighbors)[x])) {
+            moveFront((G->neighbors)[x]);
+            while(index((G->neighbors)[x]) != -1) {
+                int y = get((G->neighbors)[x]);
+                if((G->color)[y] == WHITE) {
+                    (G->color)[y] = GREY;
+                    (G->distance)[y] = (G->distance)[x] + 1;
+                    (G->parent)[y] = x;
+                    append(queue, y);
+                }
+                moveNext((G->neighbors)[x]);
             }
-            moveNext((G->neighbors)[x]);
         }
         (G->color)[x] = BLACK;
     }
