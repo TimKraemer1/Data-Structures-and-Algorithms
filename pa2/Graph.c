@@ -149,13 +149,14 @@ void getPath(List L, Graph G, int u) {
         exit(EXIT_FAILURE);
     }
 
-    List temp = newList();
     int x = u;
 
     if((G->parent)[x] == NIL && u != G->vertex_source) {
-        append(temp, NIL);
+        append(L, NIL);
         return;
     }
+
+    List temp = newList();
 
     while(x != G->vertex_source) {
         append(temp, x);
