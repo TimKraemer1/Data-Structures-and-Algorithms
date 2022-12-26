@@ -7,36 +7,6 @@
 
 int main(int arc, char* argv[]) {
 
-    Graph A = newGraph(100);
-    List L = newList();
-    List C = newList();
-    addArc(A, 64, 4);
-    addArc(A, 64, 3);
-    addArc(A, 42, 2);
-    addArc(A, 2, 64);
-    addArc(A, 4, 2);
-    addArc(A, 3, 42);
-    BFS(A, 3);
-    getPath(L, A, 64);
-    append(C, 3);
-    append(C, 42);
-    append(C, 2);
-    append(C, 64);
-    if (!equals(L, C)) printf("Test 1 Failed\n");
-    moveFront(L);
-    BFS(A, 2);
-    getPath(L, A, 2);
-    append(C, 2);
-    if (!equals(L, C)) printf("Test 2 Failed\n");
-    getPath(L, A, 99);
-    if (equals(L, C)) printf("Test 3 Failed\n");
-    clear(L);
-    clear(C);
-    append(C, NIL);
-    BFS(A, 99);
-    getPath(L, A, 2);
-    if (!equals(C ,L)) printf("Test 4 Failed\n");
-
     if(arc != 3) {
         fprintf(stderr, "Error: Expected 2 arguements (input and output file)\n");
         return -1;
