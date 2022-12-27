@@ -5,20 +5,20 @@
 #include "Graph.h"
 #include "List.h"
 
-void visit(Graph G, int x) {
-    (G->discover_time)[x]++;
+void visit(Graph G, int x, int time) {
+    (G->discover_time)[x] = ++time;
     (G->discover_time)[x] = GREY;
     if(length((G->neighbors)[x] > 1)) {
         moveFront((G->neighbors)[x]);
         for(int i = 1; index((G->neighbors)[x]) != -1; moveNext((G->neighbors)[x])) {
             if((G->color)[i] == WHITE) {
                 (G->parent)[i] = x;
-                visit(G, i);
+                visit(G, i, time);
             }
         }
     }
     (G->color)[x] = BLACK;
-    (G->finish_time)[x]++;
+    (G->finish_time)[x] = ++time;
 }
 
 void in_order(List L, int a) {
@@ -180,7 +180,6 @@ void addEdge(Graph G, int u, int v) {
 }
 
 void DFS(Graph G, List S) {
-    int time = 0;
     if(G == NULL) {
         printf("Graph Error: Calling DFS() with a NULL Graph reference\n");
         exit(EXIT_FAILURE);
@@ -192,6 +191,15 @@ void DFS(Graph G, List S) {
     for(int i = 1; i < G->vertices + 1; i++) {
         (G->color)[i] = WHITE;
         (G->parent)[i] = NIL;
+    }
+
+    int time = 0;
+    if(getOrder(G) > 0) {
+        for(int i = 1; i < getOrder(G)+1; i++) {
+            if((G->color)[i] == WHITE) {
+                visit(G, i, time);
+            }
+        }
     }
 }
 
