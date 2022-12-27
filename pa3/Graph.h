@@ -7,6 +7,9 @@
 
 typedef struct GraphObj* Graph;
 
+#define NIL   -2
+#define UNDEF -1
+
 Graph newGraph(int n);
 void freeGraph(Graph* pG);
 
