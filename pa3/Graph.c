@@ -5,22 +5,6 @@
 #include "Graph.h"
 #include "List.h"
 
-void visit(Graph G, int x, int time) {
-    (G->discover_time)[x] = ++time;
-    (G->discover_time)[x] = GREY;
-    if(length((G->neighbors)[x] > 1)) {
-        moveFront((G->neighbors)[x]);
-        for(int i = 1; index((G->neighbors)[x]) != -1; moveNext((G->neighbors)[x])) {
-            if((G->color)[i] == WHITE) {
-                (G->parent)[i] = x;
-                visit(G, i, time);
-            }
-        }
-    }
-    (G->color)[x] = BLACK;
-    (G->finish_time)[x] = ++time;
-}
-
 void in_order(List L, int a) {
     if(length(L) == 0) {
         append(L, a);
@@ -28,14 +12,14 @@ void in_order(List L, int a) {
     else {
         moveFront(L);
         while(index(L) != -1) {
-            if(a <= get(L)) {
+            if(a < get(L)) {
                 insertBefore(L, a);
                 break;
             }
             moveNext(L);
         }
         //if int hasnt been inserted at this point, it is the largest value and gets appended at the end
-        if(index(L) == -1) {
+        if(index(L) == -1 && a > back(L)) {
             append(L, a);
         }
     }
@@ -74,7 +58,7 @@ Graph newGraph(int n) {
 }
 
 void freeGraph(Graph* pG) {
-    if(pG != NULL && &pG != NULL) {
+    if(pG != NULL && pG != NULL) {
         if((*pG)->color != NULL) {
             free((*pG)->color);
             (*pG)->color = NULL;
@@ -101,6 +85,23 @@ void freeGraph(Graph* pG) {
         free(*pG);
         *pG = NULL;
     }
+}
+
+//Helper function for DFS()
+void visit(Graph G, int x, int time) {
+    (G->discover_time)[x] = ++time;
+    (G->discover_time)[x] = GREY;
+    if(length((G->neighbors)[x]) > 1) {
+        moveFront((G->neighbors)[x]);
+        for(int i = 1; index((G->neighbors)[x]) != -1; moveNext((G->neighbors)[x])) {
+            if((G->color)[i] == WHITE) {
+                (G->parent)[i] = x;
+                visit(G, i, time);
+            }
+        }
+    }
+    (G->color)[x] = BLACK;
+    (G->finish_time)[x] = ++time;
 }
 
 int getOrder(Graph G) {
@@ -161,8 +162,14 @@ void addArc(Graph G, int u, int v) {
         printf("Graph Error: Calling addArc() with an invalid vertex value\n");
         exit(EXIT_FAILURE);
     }
-    G->edges++;
+    int edge_num_u = length((G->neighbors)[u]);
     in_order((G->neighbors)[u], v);
+
+    //checking whether a new edge was actually inserted, or whether a repeating edge was ignored
+    if(edge_num_u != length((G->neighbors)[u])) {
+        G->edges++;
+    }
+
 }
 
 void addEdge(Graph G, int u, int v) {
@@ -174,9 +181,16 @@ void addEdge(Graph G, int u, int v) {
         printf("Graph Error: Calling addEdge() with an invalid vertex value\n");
         exit(EXIT_FAILURE);
     }
-    G->edges++;
+    int edge_num_u = length((G->neighbors)[u]);
+    int edge_num_v = length((G->neighbors)[v]);
+    
     in_order((G->neighbors)[u], v);
     in_order((G->neighbors)[v], u);
+
+    //checking whether a new edge was actually inserted, or whether a repeating edge was ignored
+    if(edge_num_u != length((G->neighbors)[u]) && edge_num_v != length((G->neighbors)[v])) {
+        G->edges++;
+    }
 }
 
 void DFS(Graph G, List S) {
@@ -204,11 +218,11 @@ void DFS(Graph G, List S) {
 }
 
 Graph transpose(Graph G) {
-
+    return NULL;
 }
 
 Graph copyGraph(Graph G) {
-
+    return NULL;
 }
 
 void printGraph(FILE* out, Graph G) {
