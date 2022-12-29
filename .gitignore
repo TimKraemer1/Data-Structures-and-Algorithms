@@ -1,12 +1,13 @@
-//Backup Folder
+#Backup Folder
 backup/
 
-//Object Files
+#Object Files
 *.o
 
-//Executables
+#Executables
 Lex
 graphTest
+FindPath
 
-//Text Files
+#Text Files
 *.txt

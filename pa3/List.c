@@ -184,8 +184,7 @@ void moveFront(List L) {
         exit(EXIT_FAILURE);
     }
     if(L->length == 0) {
-        printf("List Error: Calling moveFront() with empty List reference\n");
-        exit(EXIT_FAILURE);
+        return;
     }
     L->cursor = L->front;
     L->index = 0;
@@ -198,8 +197,7 @@ void moveBack(List L) {
         exit(EXIT_FAILURE);
     }
     if(L->length == 0) {
-        printf("List Error: Calling moveBack() with empty List reference\n");
-        exit(EXIT_FAILURE);
+        return;
     }
     L->cursor = L->back;
     L->index = L->length - 1;

@@ -218,11 +218,36 @@ void DFS(Graph G, List S) {
 }
 
 Graph transpose(Graph G) {
-    return NULL;
+    if(G == NULL) {
+        printf("Graph Error: calling transpose() on a NULL graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+    Graph q = newGraph(G->vertices);
+    int j = 0;
+
+    for(int i = 1; i < G->vertices + 1; i++) {
+        moveFront((G->neighbors)[i]);
+        while(index((G->neighbors)[i]) != -1) {
+            j = get((G->neighbors)[i]);
+            addArc(q, j, i);
+            moveNext((G->neighbors)[i]);
+        }
+    }
+    return q;
 }
 
 Graph copyGraph(Graph G) {
+    if(G == NULL) {
+        printf("Graph Error: calling copyGraph() on a NULL graph reference\n");
+        exit(EXIT_FAILURE);
+    }
+
     Graph q = newGraph(G->vertices);
+    //this frees all of the lists that are allocated by default in the neighbors array, to avoid double allocation and mem leaks
+    for(int i = 0; i < G->vertices + 1; i++) {
+        freeList(&((q->neighbors)[i]));
+    }
+
     for(int i = 0; i < G->vertices + 1; i++) {
         (q->color)[i] = (G->color)[i];
         (q->parent)[i] = (G->parent)[i];
