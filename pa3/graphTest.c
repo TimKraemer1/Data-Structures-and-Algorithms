@@ -8,12 +8,17 @@ int main(void) {
     Graph test = newGraph(10);
 
     addEdge(test, 2, 6);
-    addArc(test, 6, 2);
+    addEdge(test, 3, 8);
 
-    printf("%d\n", getOrder(test));
-    printf("%d\n", getSize(test));
+    Graph test_copy = copyGraph(test);
+
 
     printGraph(stdout, test);
+    printf("\n");
+    printGraph(stdout, test_copy);
+    printf("\n");
+    printf("Edges in Copy: %d\n", getSize(test_copy));
 
     freeGraph(&test);
+    freeGraph(&test_copy);
 }

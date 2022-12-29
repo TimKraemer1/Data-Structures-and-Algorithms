@@ -222,7 +222,16 @@ Graph transpose(Graph G) {
 }
 
 Graph copyGraph(Graph G) {
-    return NULL;
+    Graph q = newGraph(G->vertices);
+    for(int i = 0; i < G->vertices + 1; i++) {
+        (q->color)[i] = (G->color)[i];
+        (q->parent)[i] = (G->parent)[i];
+        (q->discover_time)[i] = (G->discover_time)[i];
+        (q->finish_time)[i] = (G->finish_time)[i];
+        (q->neighbors)[i] = copyList((G->neighbors)[i]);
+    }
+    q->edges = G->edges;
+    return q;
 }
 
 void printGraph(FILE* out, Graph G) {
