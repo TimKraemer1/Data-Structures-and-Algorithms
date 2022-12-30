@@ -5,26 +5,6 @@
 #include "Graph.h"
 #include "List.h"
 
-void in_order(List L, int a) {
-    if(length(L) == 0) {
-        append(L, a);
-    }
-    else {
-        moveFront(L);
-        while(index(L) != -1) {
-            if(a < get(L)) {
-                insertBefore(L, a);
-                break;
-            }
-            moveNext(L);
-        }
-        //if int hasnt been inserted at this point, it is the largest value and gets appended at the end
-        if(index(L) == -1 && a > back(L)) {
-            append(L, a);
-        }
-    }
-}
-
 enum color {WHITE, GREY, BLACK};
 
 typedef struct GraphObj {
@@ -86,18 +66,48 @@ void freeGraph(Graph* pG) {
         *pG = NULL;
     }
 }
+//-------Helper function that sorts an element into list------------------------------------------------
+void in_order(List L, int a, int edges) {
+    if(length(L) == 0) {
+        append(L, a);
+    }
+    else {
+        moveFront(L);
+        while(index(L) != -1) {
+            if(a < get(L)) {
+                insertBefore(L, a);
+                edges++;
+                break;
+            }
+            //if the target element is equal to comparative element, then it already exists and not do anything else
+            else if(a == get(L)) {
+                return;
+            }
+            moveNext(L);
+        }
+        //if int hasnt been inserted at this point, it is the largest value and gets appended at the end
+        if(index(L) == -1 && a > back(L)) {
+            append(L, a);
+            edges++;
+        }
+    }
+}
+//-------------------------------------------------------------------------------------------------------
 
 //Helper function for DFS()
 void visit(Graph G, int x, int time) {
     (G->discover_time)[x] = ++time;
-    (G->discover_time)[x] = GREY;
-    if(length((G->neighbors)[x]) > 1) {
+    (G->color)[x] = GREY;
+    int i;
+    if(length((G->neighbors)[x]) > 0) {
         moveFront((G->neighbors)[x]);
-        for(int i = 1; index((G->neighbors)[x]) != -1; moveNext((G->neighbors)[x])) {
+        while(index((G->neighbors)[x]) != -1) {
+            i = get((G->neighbors)[x]);
             if((G->color)[i] == WHITE) {
                 (G->parent)[i] = x;
-                visit(G, i, time);
+                visit(G, get((G->neighbors)[x]), time);
             }
+            moveNext((G->neighbors)[x]);
         }
     }
     (G->color)[x] = BLACK;
@@ -162,14 +172,7 @@ void addArc(Graph G, int u, int v) {
         printf("Graph Error: Calling addArc() with an invalid vertex value\n");
         exit(EXIT_FAILURE);
     }
-    int edge_num_u = length((G->neighbors)[u]);
-    in_order((G->neighbors)[u], v);
-
-    //checking whether a new edge was actually inserted, or whether a repeating edge was ignored
-    if(edge_num_u != length((G->neighbors)[u])) {
-        G->edges++;
-    }
-
+    in_order((G->neighbors)[u], v, G->edges);
 }
 
 void addEdge(Graph G, int u, int v) {
@@ -181,16 +184,9 @@ void addEdge(Graph G, int u, int v) {
         printf("Graph Error: Calling addEdge() with an invalid vertex value\n");
         exit(EXIT_FAILURE);
     }
-    int edge_num_u = length((G->neighbors)[u]);
-    int edge_num_v = length((G->neighbors)[v]);
     
-    in_order((G->neighbors)[u], v);
-    in_order((G->neighbors)[v], u);
-
-    //checking whether a new edge was actually inserted, or whether a repeating edge was ignored
-    if(edge_num_u != length((G->neighbors)[u]) && edge_num_v != length((G->neighbors)[v])) {
-        G->edges++;
-    }
+    in_order((G->neighbors)[u], v, G->edges);
+    in_order((G->neighbors)[v], u, G->edges);
 }
 
 void DFS(Graph G, List S) {
