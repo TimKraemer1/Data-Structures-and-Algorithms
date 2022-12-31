@@ -95,23 +95,23 @@ void in_order(List L, int a, int edges) {
 //-------------------------------------------------------------------------------------------------------
 
 //Helper function for DFS()
-void visit(Graph G, int x, int time) {
-    (G->discover_time)[x] = ++time;
+void visit(Graph G, int x, int* time) {
+    (G->discover_time)[x] = ++(*time);
     (G->color)[x] = GREY;
-    int i;
+    int y;
     if(length((G->neighbors)[x]) > 0) {
         moveFront((G->neighbors)[x]);
         while(index((G->neighbors)[x]) != -1) {
-            i = get((G->neighbors)[x]);
-            if((G->color)[i] == WHITE) {
-                (G->parent)[i] = x;
-                visit(G, get((G->neighbors)[x]), time);
+            y = get((G->neighbors)[x]);
+            if((G->color)[y] == WHITE) {
+                (G->parent)[y] = x;
+                visit(G, y, time);
             }
             moveNext((G->neighbors)[x]);
         }
     }
     (G->color)[x] = BLACK;
-    (G->finish_time)[x] = ++time;
+    (G->finish_time)[x] = ++(*time);
 }
 
 int getOrder(Graph G) {
@@ -204,11 +204,9 @@ void DFS(Graph G, List S) {
     }
 
     int time = 0;
-    if(getOrder(G) > 0) {
-        for(int i = 1; i < getOrder(G)+1; i++) {
-            if((G->color)[i] == WHITE) {
-                visit(G, i, time);
-            }
+    for(int i = 1; i <= getOrder(G); i++) {
+        if((G->color)[i] == WHITE) {
+            visit(G, i, &time);
         }
     }
 }
