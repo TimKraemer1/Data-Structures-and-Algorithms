@@ -95,7 +95,7 @@ void in_order(List L, int a, int edges) {
 //-------------------------------------------------------------------------------------------------------
 
 //Helper function for DFS()
-void visit(Graph G, int x, int* time) {
+void visit(Graph G, int x, int* time, List L) {
     (G->discover_time)[x] = ++(*time);
     (G->color)[x] = GREY;
     int y;
@@ -105,13 +105,15 @@ void visit(Graph G, int x, int* time) {
             y = get((G->neighbors)[x]);
             if((G->color)[y] == WHITE) {
                 (G->parent)[y] = x;
-                visit(G, y, time);
+                visit(G, y, time, L);
             }
             moveNext((G->neighbors)[x]);
         }
     }
     (G->color)[x] = BLACK;
     (G->finish_time)[x] = ++(*time);
+    append(L, x);
+
 }
 
 int getOrder(Graph G) {
@@ -202,13 +204,22 @@ void DFS(Graph G, List S) {
         (G->color)[i] = WHITE;
         (G->parent)[i] = NIL;
     }
-
+    List order_List = newList();
     int time = 0;
     for(int i = 1; i <= getOrder(G); i++) {
         if((G->color)[i] == WHITE) {
-            visit(G, i, &time);
+            visit(G, i, &time, order_List);
         }
     }
+    moveFront(order_List);
+    moveFront(S);
+    while(index(S) != -1 || index(order_List) != -1) {
+        set(S, get(order_List));
+        moveNext(S);
+        moveNext(order_List);
+    }
+    
+    freeList(&order_List);
 }
 
 Graph transpose(Graph G) {

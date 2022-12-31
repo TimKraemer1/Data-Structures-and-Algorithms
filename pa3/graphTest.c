@@ -33,9 +33,7 @@ int main(void) {
 
     DFS(test, test_list);
 
-    for(int i = 1; i < getOrder(test) + 1; i++) {
-        printf("Discover Time: %d\n", getDiscover(test, i));
-    }
+    printList(stdout, test_list);
 
     freeGraph(&test);
     freeList(&test_list);
