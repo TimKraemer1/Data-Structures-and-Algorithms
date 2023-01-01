@@ -112,7 +112,7 @@ void visit(Graph G, int x, int* time, List L) {
     }
     (G->color)[x] = BLACK;
     (G->finish_time)[x] = ++(*time);
-    append(L, x);
+    prepend(L, x);
 
 }
 
