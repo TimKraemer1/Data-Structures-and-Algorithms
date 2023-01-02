@@ -206,10 +206,12 @@ void DFS(Graph G, List S) {
     }
     List order_List = newList();
     int time = 0;
-    for(int i = 1; i <= getOrder(G); i++) {
-        if((G->color)[i] == WHITE) {
-            visit(G, i, &time, order_List);
+    moveFront(S);
+    while(index(S) != -1) {
+        if((G->color)[get(S)] == WHITE) {
+            visit(G, get(S), &time, order_List);
         }
+        moveNext(S);
     }
     moveFront(order_List);
     moveFront(S);
@@ -230,7 +232,7 @@ Graph transpose(Graph G) {
     Graph q = newGraph(G->vertices);
     int j = 0;
 
-    for(int i = 1; i < G->vertices + 1; i++) {
+    for(int i = 1; i <= G->vertices; i++) {
         moveFront((G->neighbors)[i]);
         while(index((G->neighbors)[i]) != -1) {
             j = get((G->neighbors)[i]);

@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
         if(vert1 == 0 && vert2 == 0) {
             break;
         }
-        addEdge(q, vert1, vert2);
+        addArc(q, vert1, vert2);
     }
 
     printGraph(out_fp, q);
@@ -48,9 +48,10 @@ int main(int argc, char* argv[]) {
 
     DFS(q, DFS_list);
 
-    Graph transp_q = newGraph(num_vert);
+    Graph transp_q = transpose(q);
+    printGraph(stdout, transp_q);
     DFS(transp_q, DFS_list);
-
+    printList(stdout, DFS_list);
 
     int counter = 0;
 
@@ -58,14 +59,14 @@ int main(int argc, char* argv[]) {
     while(index(DFS_list) != -1) {
         if(getParent(transp_q, get(DFS_list)) == NIL) {
             counter++;
-            moveNext(DFS_list);
         }
+        moveNext(DFS_list);
     }
     fprintf(out_fp, "G contains %d strongly connected components:\n", counter);
 
     List strn_comp = newList();
     counter = 0;
-    moveFront(DFS_list);
+    moveBack(DFS_list);
     while(index(DFS_list) != -1) {
         prepend(strn_comp, get(DFS_list));
         if(getParent(transp_q, get(DFS_list)) == NIL) {
@@ -75,6 +76,7 @@ int main(int argc, char* argv[]) {
             fprintf(out_fp, "\n");
             clear(strn_comp);
         }
+         movePrev(DFS_list);
     }
     freeGraph(&q);
     freeGraph(&transp_q);
