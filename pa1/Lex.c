@@ -1,80 +1,90 @@
+//Tim Kraemer
+//CruzID: tikraeme
+//pa1
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include <string.h>
+
 #include "List.h"
 
+#define MAX_LEN 4096;
+
 int main(int argc, char* argv[]) {
-
-    if(argc != 3) {
-        fprintf(stderr, "Error: Expected 2 arguements (input and output file)\n");
-        exit(EXIT_FAILURE);
+    //check number of arguements
+    if (argc != 3) {
+        fprintf(stderr, "Lex Error: Invalid number of input arguements\n");
+        return -1;
     }
 
-    int line_count = 0;
+    int l_count = 0;
+
+    //opening files and checking if they are opened correctly
     FILE* in_fp = fopen(argv[1], "r");
-
-    if(in_fp == NULL){
-        printf("IO Error: Could not open file %s\n", argv[1]);
-        return -1;    
-        }
-    for(char c = getc(in_fp); c != EOF; c = getc(in_fp)) {
-        if(c == '\n') {
-            line_count++;
-        }
+    if(in_fp == NULL) {
+        fprintf(stderr, "Lex Error: Unable to open input file\n");
+        return -1;
     }
+    FILE* out_fp = fopen(argv[2], "w");
+    if(out_fp == NULL) {
+        fprintf(stderr, "Lex Error: Unable to open output file\n");
+    }
+
+    //count number of lines in the input file
+    char c = getc(in_fp);
+    while(c != EOF) {
+        if(c == '\n') {l_count++;}
+        c = getc(in_fp);
+    }
+
     fseek(in_fp, 0, SEEK_SET);
 
-    char** input_array = calloc(line_count, sizeof(char*));
-
-    int string_length = 100;
-    for(int i = 0; i < line_count; i++) {
-        char* new_word = malloc(sizeof(char) * string_length);
-        fgets(new_word, string_length, in_fp);
-        new_word[strlen(new_word)-1] = '\0';
-        input_array[i] = new_word;
+    char buf[301];
+    
+    //allocate line array, and read in each line and store it in the array
+    char** line_array = calloc(l_count, sizeof(char*));
+    for(int i = 0; i < l_count; i++) {
+        fgets(buf, 301, in_fp);
+        buf[strlen(buf)-1] = '\0';
+        char* new_line = calloc(strlen(buf)+1, sizeof(char));
+        strcpy(new_line, buf);
+        line_array[i] = new_line;
     }
 
     fclose(in_fp);
-    
-    List word_list = newList();
 
-    for(int i = 0; i < line_count; i++) {
-        if(length(word_list) == 0) {
-            append(word_list, i);
-            moveFront(word_list);
+    //compare lines and then insert their indexes alphabetically in the List
+    List sorting_list = newList();
+    append(sorting_list, 0);
+    for(int i = 1; i < l_count; i++) {
+        moveFront(sorting_list);
+        for(int j = 0; j < length(sorting_list); j++) {
+            if(strcmp(line_array[i], line_array[get(sorting_list)]) <= 0) {
+                insertBefore(sorting_list, i);
+                break;
+            }
+            moveNext(sorting_list);
         }
-        else {
-            for(int j=0; j < length(word_list); j++) {
-                if(strcmp(input_array[i], input_array[get(word_list)]) <= 0) {
-                    insertBefore(word_list, i);
-                    break;
-                }
-                moveNext(word_list);
-            }
-            //check to see if we already inserted the current index anywhere in the list earlier
-            if(index(word_list) == -1) {
-                append(word_list, i);
-            }
-            moveFront(word_list);
+        if(index(sorting_list) == -1) {
+            append(sorting_list, i);
         }
     }
 
-    FILE* out_fp = fopen(argv[2], "w");
-    moveFront(word_list);
-    while(index(word_list) != -1) {
-        fprintf(out_fp, "%s\n", input_array[get(word_list)]);
-        moveNext(word_list);
+    //print the lines in the order of the indexes
+    moveFront(sorting_list);
+    while(index(sorting_list) != -1) {
+        fprintf(out_fp, "%s\n", line_array[get(sorting_list)]);
+        moveNext(sorting_list);
     }
-
     fclose(out_fp);
 
-    //freeing linked list
-    freeList(&word_list);
-
-    //freeing word array
-    for(int i = 0; i < line_count; i++) {
-        free(input_array[i]);
+    //free memory
+    freeList(&sorting_list);
+    for(int i = 0; i < l_count; i++) {
+	free(line_array[i]);
     }
-    free(input_array);
+    free(line_array);
 }
+
